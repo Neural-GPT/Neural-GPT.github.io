@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Update the host below to your real Pages URL once deployed.
+Sitemap: https://neural-gpt.github.io/sitemap.xml

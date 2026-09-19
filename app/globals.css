@@ -1,0 +1,245 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --------------------------------------------------------------------------
+   Tokens
+   -------------------------------------------------------------------------- */
+:root {
+  --void: #010110;
+  --panel: #05061c;
+  --line: rgba(255, 255, 255, 0.09);
+  --line-bright: rgba(255, 255, 255, 0.22);
+  /* Kept as an RGB triple as well as a hex so alpha variants can be derived.
+     The terminal's `theme` command rewrites both at runtime. */
+  --accent: #22d3ee;
+  --accent-rgb: 34, 211, 238;
+  --accent-soft: #7dd3fc;
+  --ice: #e8f6ff;
+  --muted: #8493b8;
+  --shell: 1180px;
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 96px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--void);
+    color: var(--ice);
+    font-feature-settings: "ss01", "cv01";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* The faint engineering grid the whole page sits on. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+    background-size: 68px 68px;
+    mask-image: radial-gradient(ellipse 100% 70% at 50% 0%, #000 35%, transparent 85%);
+    -webkit-mask-image: radial-gradient(ellipse 100% 70% at 50% 0%, #000 35%, transparent 85%);
+  }
+
+  ::selection {
+    background: rgba(var(--accent-rgb), 0.28);
+    color: #ffffff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #02021a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #14203f;
+    border: 2px solid #02021a;
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #1d3560;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Components
+   -------------------------------------------------------------------------- */
+@layer components {
+  .shell {
+    width: 100%;
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  /* Bright, crisp boundary — the signature of the theme. */
+  .edge {
+    position: relative;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0) 55%),
+      var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+
+  .edge-bright {
+    border-color: var(--line-bright);
+  }
+
+  /* Corner ticks — reads as a technical frame, not a rounded SaaS card. */
+  .ticks::before,
+  .ticks::after {
+    content: "";
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border-color: var(--accent);
+    opacity: 0.75;
+    pointer-events: none;
+  }
+  .ticks::before {
+    top: -1px;
+    left: -1px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+  }
+  .ticks::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 1px solid;
+    border-right: 1px solid;
+  }
+
+  .section-rule {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(var(--accent-rgb), 0.55),
+      rgba(255, 255, 255, 0.12) 22%,
+      rgba(255, 255, 255, 0) 70%
+    );
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.25rem 0.7rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    color: var(--accent-soft);
+    background: rgba(var(--accent-rgb), 0.05);
+    white-space: nowrap;
+  }
+
+  .link-quiet {
+    color: var(--muted);
+    transition: color 160ms ease;
+  }
+  .link-quiet:hover {
+    color: var(--accent);
+  }
+
+  /* Terminal chrome */
+  .crt {
+    position: relative;
+    overflow: hidden;
+  }
+  .crt::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.022) 0px,
+      rgba(255, 255, 255, 0.022) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Utilities
+   -------------------------------------------------------------------------- */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .glow-text {
+    text-shadow: 0 0 22px rgba(var(--accent-rgb), 0.45);
+  }
+
+  /* Cursor-tracked glow used by GlowCard; --mx/--my are set in JS. */
+  .spotlight {
+    background: radial-gradient(
+      320px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(var(--accent-rgb), 0.16),
+      transparent 62%
+    );
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Recharts overrides — keep the charts on-theme
+   -------------------------------------------------------------------------- */
+.recharts-polar-grid-angle line,
+.recharts-polar-grid-concentric-polygon {
+  stroke: rgba(255, 255, 255, 0.1) !important;
+}
+.recharts-polar-angle-axis-tick-value {
+  fill: var(--muted) !important;
+  font-size: 11px;
+}
+.recharts-surface:focus {
+  outline: none;
+}
+
+/* --------------------------------------------------------------------------
+   Respect the OS preference
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
