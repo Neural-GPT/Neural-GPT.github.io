@@ -183,6 +183,119 @@
       transparent 3px
     );
   }
+
+  /* ------------------------------------------------------------------
+     ECG divider — the heartbeat strip between sections.
+     Canvas-driven: HeartbeatDivider.jsx generates the waveform sample
+     by sample in real time (see that file), so nothing here loops a
+     static asset. These rules just position the canvas and the tag.
+     ------------------------------------------------------------------ */
+  .ecg {
+    position: relative;
+    height: 64px;
+    overflow: hidden;
+    background: var(--void);
+  }
+  .ecg::before,
+  .ecg::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    z-index: 2;
+  }
+  .ecg::before {
+    top: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(var(--accent-rgb), 0.4) 50%,
+      transparent
+    );
+  }
+  .ecg::after {
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(var(--accent-rgb), 0.4) 50%,
+      transparent
+    );
+  }
+
+  .ecg-canvas {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .ecg-fade {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 88px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .ecg-fade-l {
+    left: 0;
+    background: linear-gradient(90deg, var(--void), transparent);
+  }
+  .ecg-fade-r {
+    right: 0;
+    background: linear-gradient(270deg, var(--void), transparent);
+  }
+
+  .ecg-tag {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    border: 1px solid var(--line-bright);
+    border-radius: 999px;
+    background: rgba(1, 1, 16, 0.78);
+    backdrop-filter: blur(6px);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .ecg-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  /* One-shot, triggered from JS exactly when a beat's R-wave is
+     generated — not an infinite loop, so it's genuinely synced to
+     the waveform rather than approximating it. */
+  .ecg-dot.ecg-beat {
+    animation: ecg-pulse 650ms ease-out;
+  }
+  @keyframes ecg-pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.6);
+    }
+    70% {
+      box-shadow: 0 0 0 9px rgba(var(--accent-rgb), 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0);
+    }
+  }
+  .ecg-bpm {
+    color: var(--accent-soft);
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 /* --------------------------------------------------------------------------

@@ -5,12 +5,20 @@ import { useEffect, useRef } from "react";
 /**
  * ParticleField
  * ---------------------------------------------------------------
- * A drifting constellation mesh drawn on a 2D canvas behind the hero.
+ * A drifting node mesh drawn on a 2D canvas behind the hero, styled
+ * as a neural network: nodes connect when close enough, and short
+ * bright pulses travel along a random live connection every so often,
+ * the way an activation fires across a synapse. That firing is what
+ * reads as "neural network" rather than "constellation" — the mesh
+ * shape alone doesn't carry that on its own.
  *
  * Performance notes, because this runs on every page load:
  *  - One canvas, one rAF loop, zero React state. Nothing re-renders.
  *  - Neighbour search is bucketed into a spatial grid, so link cost is
  *    roughly O(n) instead of the O(n²) every-pair comparison.
+ *  - Pulses are sampled from the edges already drawn this frame, so
+ *    finding a valid A→B pair costs nothing extra — no additional
+ *    distance checks.
  *  - The loop stops entirely when the hero scrolls out of view or the
  *    tab is hidden.
  *  - Node count scales with viewport area and is capped on small screens.
@@ -22,6 +30,8 @@ export default function ParticleField({
   maxNodes = 130,
   linkDist = 138,
   parallax = 26, // px the whole field drifts across the viewport
+  pulseEvery = 550, // ms between spawning a new signal pulse
+  maxPulses = 7,
 }) {
   const canvasRef = useRef(null);
   const wrapRef = useRef(null);
@@ -40,6 +50,13 @@ export default function ParticleField({
     let nodes = [];
     let raf = 0;
     let running = true;
+
+    // Signal pulses travelling along a live edge, plus the pool of
+    // edges to spawn them from — refilled each frame as a side effect
+    // of the link-drawing pass below, so sampling one is free.
+    let pulses = [];
+    let edgeSample = [];
+    let pulseTimer = 0;
 
     // pointer, in canvas space; target vs eased for smooth parallax
     const pointer = { x: -9999, y: -9999, tx: -9999, ty: -9999, active: false };
@@ -72,6 +89,8 @@ export default function ParticleField({
         // depth drives both parallax amount and brightness
         z: Math.random() * 0.75 + 0.25,
       }));
+      // old pulses may reference nodes that no longer exist post-resize
+      pulses = [];
     }
 
     // Spatial hash so we only compare nodes in adjacent buckets.
@@ -111,6 +130,9 @@ export default function ParticleField({
 
       const { grid, cols, rows, cell } = buildGrid();
 
+      // refilled below as a byproduct of drawing links; pulses sample from it
+      edgeSample.length = 0;
+
       // ---- links -------------------------------------------------
       ctx.lineWidth = 1;
       for (let cy = 0; cy < rows; cy++) {
@@ -149,6 +171,11 @@ export default function ParticleField({
 
                   const alpha = fade * 0.2 * depth + near * fade * 0.5;
                   if (alpha < 0.012) continue;
+
+                  // a visibly-drawn edge is fair game for a pulse to travel along
+                  if (alpha > 0.05 && edgeSample.length < 260) {
+                    edgeSample.push(A, B);
+                  }
 
                   ctx.strokeStyle = near > 0.05
                     ? `rgba(120,225,255,${alpha})`
@@ -192,6 +219,48 @@ export default function ParticleField({
         ctx.fillStyle = near > 0.2
           ? `rgba(180,240,255,${alpha})`
           : `rgba(200,220,255,${alpha})`;
+        ctx.fill();
+      }
+      ctx.shadowBlur = 0;
+
+      // ---- signal pulses ------------------------------------------
+      // A short bright dot travelling A→B along a connection that's
+      // already on screen — the "activation firing" that makes this
+      // read as a neural net rather than a static star map.
+      pulseTimer += 16; // approx ms/frame; a decorative timer, not physics
+      if (pulseTimer > pulseEvery && pulses.length < maxPulses && edgeSample.length >= 2) {
+        pulseTimer = 0;
+        const pairs = edgeSample.length / 2;
+        const i = (Math.floor(Math.random() * pairs) * 2) | 0;
+        pulses.push({
+          A: edgeSample[i],
+          B: edgeSample[i + 1],
+          t: 0,
+          dur: 480 + Math.random() * 420,
+        });
+      }
+
+      for (let i = pulses.length - 1; i >= 0; i--) {
+        const p = pulses[i];
+        p.t += 16;
+        if (p.t >= p.dur) {
+          pulses.splice(i, 1);
+          continue;
+        }
+        const k = p.t / p.dur;
+        // ease in/out so the pulse doesn't feel linear-robotic
+        const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        const fade = Math.sin(Math.PI * k); // fades in, peaks mid-flight, fades out
+        const depth = (p.A.z + p.B.z) / 2;
+
+        const px = p.A.x + (p.B.x - p.A.x) * e + drift.x * depth;
+        const py = p.A.y + (p.B.y - p.A.y) * e + drift.y * depth;
+
+        ctx.shadowBlur = 13;
+        ctx.shadowColor = "rgba(34,211,238,0.9)";
+        ctx.beginPath();
+        ctx.arc(px, py, 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(195,247,255,${0.85 * fade})`;
         ctx.fill();
       }
       ctx.shadowBlur = 0;
@@ -270,7 +339,7 @@ export default function ParticleField({
       window.removeEventListener("pointerleave", onLeave);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [density, maxNodes, linkDist, parallax]);
+  }, [density, maxNodes, linkDist, parallax, pulseEvery, maxPulses]);
 
   return (
     <div
