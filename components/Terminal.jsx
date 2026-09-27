@@ -34,7 +34,7 @@ const bullet = (text) => out(`  • ${text}`);
 const kv = (k, v) => out(`  ${k.padEnd(14)}${v}`, "kv");
 
 // ---- command registry -----------------------------------------------------
-function buildRegistry({ clear, setTheme }) {
+function buildRegistry({ clear, setTheme, themeKeys }) {
   const registry = {
     help: {
       blurb: "list everything this shell understands",
@@ -60,7 +60,7 @@ function buildRegistry({ clear, setTheme }) {
         out(profile.blurb),
         blank(),
         kv("location", profile.location),
-        kv("school", `${education.school} — ${education.short}, class of ${education.graduation}`),
+        kv("school", `${education.school} · ${education.short}, class of ${education.graduation}`),
         kv("focus", "NLP · RAG · computer vision · anomaly detection"),
         blank(),
         head("highlights"),
@@ -73,7 +73,7 @@ function buildRegistry({ clear, setTheme }) {
       run: () => [
         head(`projects (${projects.length})`),
         ...projects.flatMap((p) => [
-          ok(`  ${p.name} — ${p.subtitle}`),
+          ok(`  ${p.name} · ${p.subtitle}`),
           out(`    ${p.summary}`, "dim"),
           out(`    stack: ${p.stack.join(", ")}`, "dim"),
           blank(),
@@ -147,7 +147,7 @@ function buildRegistry({ clear, setTheme }) {
     },
 
     open: {
-      blurb: "open a project repo — `open leettrack`",
+      blurb: "open a project repo, e.g. `open leettrack`",
       run: (args) => {
         const q = (args[0] || "").toLowerCase();
         if (!q) {
@@ -181,7 +181,7 @@ function buildRegistry({ clear, setTheme }) {
     },
 
     cat: {
-      blurb: "print a file — `cat resume.txt`",
+      blurb: "print a file, e.g. `cat resume.txt`",
       run: (args) => {
         const f = (args[0] || "").toLowerCase();
         if (f === "resume.txt" || f === "resume") {
@@ -190,13 +190,13 @@ function buildRegistry({ clear, setTheme }) {
             out(`${profile.phone}  |  ${profile.email}  |  ${profile.githubUrl}`, "dim"),
             blank(),
             ok("EDUCATION"),
-            out(`  ${education.school} — ${education.degree}, ${education.graduation}`),
+            out(`  ${education.school} · ${education.degree}, ${education.graduation}`),
             blank(),
             ok("RESEARCH"),
             ...research.map((r) => out(`  ${r.role} · ${r.org} · ${r.period}`)),
             blank(),
             ok("PROJECTS"),
-            ...projects.map((p) => out(`  ${p.name} — ${p.subtitle} (${p.date})`)),
+            ...projects.map((p) => out(`  ${p.name} · ${p.subtitle} (${p.date})`)),
             blank(),
             out("  Full PDF: the Résumé button in the header.", "dim"),
           ];
@@ -224,11 +224,19 @@ function buildRegistry({ clear, setTheme }) {
     },
 
     theme: {
-      blurb: "cycle the accent colour",
-      run: () => {
-        const next = setTheme();
-        return [ok(`Accent set to ${next}.`)];
+      blurb: "swap the color theme, e.g. `theme matrix`",
+      run: (args) => {
+        const target = (args[0] || "").toLowerCase();
+        if (target && !themeKeys.includes(target)) {
+          return [
+            err(`theme: no theme matching "${target}"`),
+            out(`  try: ${themeKeys.join(", ")}`, "dim"),
+          ];
+        }
+        const applied = setTheme(target || undefined);
+        return [ok(`Theme set to ${applied}.`)];
       },
+      complete: () => themeKeys,
     },
 
     date: {
@@ -264,7 +272,7 @@ function buildRegistry({ clear, setTheme }) {
 
 // ---- banner ---------------------------------------------------------------
 const BANNER = [
-  ok(`${profile.name} — ${profile.role}`),
+  ok(`${profile.name} · ${profile.role}`),
   out(`Type \`help\` to see what this shell can do.`, "dim"),
   blank(),
 ];
@@ -289,13 +297,51 @@ export default function Terminal({ className = "", startOpen = true }) {
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
 
-  // rgb is carried alongside hex so CSS can build alpha variants from it
+  // Each theme carries hex + space-separated RGB for both the accent and
+  // its soft variant, so `rgb(var(--accent-rgb) / <alpha>)` utilities across
+  // the whole site stay in sync with whatever `theme` sets at runtime.
   const ACCENTS = useMemo(
     () => [
-      { name: "cyan", hex: "#22d3ee", rgb: "34, 211, 238", soft: "#7dd3fc" },
-      { name: "ice-white", hex: "#e8f6ff", rgb: "232, 246, 255", soft: "#ffffff" },
-      { name: "violet", hex: "#a78bfa", rgb: "167, 139, 250", soft: "#c4b5fd" },
-      { name: "signal-green", hex: "#4ade80", rgb: "74, 222, 128", soft: "#86efac" },
+      {
+        key: "cyan",
+        name: "Signal Cyan",
+        hex: "#22d3ee",
+        rgb: "34 211 238",
+        soft: "#7dd3fc",
+        softRgb: "125 211 252",
+      },
+      {
+        key: "matrix",
+        name: "Matrix Neon",
+        hex: "#00ff6a",
+        rgb: "0 255 106",
+        soft: "#8dffc0",
+        softRgb: "141 255 192",
+      },
+      {
+        key: "synthwave",
+        name: "Synthwave Purple",
+        hex: "#e879f9",
+        rgb: "232 121 249",
+        soft: "#f0abfc",
+        softRgb: "240 171 252",
+      },
+      {
+        key: "cyberpunk",
+        name: "Cyberpunk Yellow",
+        hex: "#facc15",
+        rgb: "250 204 21",
+        soft: "#fde047",
+        softRgb: "253 224 71",
+      },
+      {
+        key: "contrast",
+        name: "Dark Contrast",
+        hex: "#f5f5f5",
+        rgb: "245 245 245",
+        soft: "#ffffff",
+        softRgb: "255 255 255",
+      },
     ],
     []
   );
@@ -304,14 +350,23 @@ export default function Terminal({ className = "", startOpen = true }) {
     () =>
       buildRegistry({
         clear: () => setLines([]),
-        setTheme: () => {
-          const next = (accent + 1) % ACCENTS.length;
+        themeKeys: ACCENTS.map((a) => a.key),
+        // With no target, cycles to the next theme. With a target key
+        // (e.g. "matrix"), jumps straight to it. Either way it rewrites
+        // the CSS variables every `cyan-*` utility in the app reads from,
+        // so the whole DOM re-themes at once.
+        setTheme: (target) => {
+          const idx = target
+            ? ACCENTS.findIndex((a) => a.key === target)
+            : -1;
+          const next = idx === -1 ? (accent + 1) % ACCENTS.length : idx;
           setAccent(next);
           if (typeof document !== "undefined") {
             const root = document.documentElement.style;
             root.setProperty("--accent", ACCENTS[next].hex);
             root.setProperty("--accent-rgb", ACCENTS[next].rgb);
             root.setProperty("--accent-soft", ACCENTS[next].soft);
+            root.setProperty("--accent-soft-rgb", ACCENTS[next].softRgb);
           }
           return ACCENTS[next].name;
         },
@@ -422,7 +477,7 @@ export default function Terminal({ className = "", startOpen = true }) {
         <span className="h-2.5 w-2.5 rounded-full bg-amber-400/70" />
         <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/70" />
         <span className="ml-2 font-mono text-2xs tracking-wide text-dim">
-          bash — portfolio.sh
+          bash · portfolio.sh
         </span>
         <span className="ml-auto font-mono text-2xs text-dim">
           {Object.keys(registry).length} commands
@@ -469,7 +524,7 @@ export default function Terminal({ className = "", startOpen = true }) {
 
       {/* hint bar */}
       <div className="flex flex-wrap items-center gap-1.5 border-t border-line px-3.5 py-2">
-        {["help", "bio", "projects", "research", "neofetch"].map((c) => (
+        {["help", "bio", "projects", "research", "theme"].map((c) => (
           <button
             key={c}
             onClick={(e) => {
