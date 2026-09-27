@@ -188,7 +188,7 @@ export default function GitHubActivity() {
     { icon: Calendar, value: `${activeDays}`, label: "active days" },
     {
       icon: Github,
-      value: best?.count ? `${best.count}` : "—",
+      value: best?.count ? `${best.count}` : "N/A",
       label: "busiest single day",
     },
   ];
@@ -232,7 +232,7 @@ export default function GitHubActivity() {
                         ? "fetching contribution graph…"
                         : state === "live"
                         ? `${total.toLocaleString()} contributions in the last year`
-                        : "sample grid — live fetch unavailable right now"}
+                        : "sample grid, live fetch unavailable right now"}
                     </p>
                   </div>
                   <span
