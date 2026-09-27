@@ -6,21 +6,22 @@ import SectionHeading from "./ui/SectionHeading";
 import { Stagger, Reveal } from "./ui/Reveal";
 import GlowCard from "./ui/GlowCard";
 import Magnetic from "./ui/Magnetic";
+import Tilt from "./ui/Tilt";
 
 /**
  * Projects
  * ---------------------------------------------------------------
- * Each card leads with the number that matters — 0.99 AUC, 150+
- * students — because that is the thing a reader is actually
- * scanning for. Cards are magnetic with a low strength so a grid
- * of them doesn't feel jittery.
+ * Each card leads with the number that matters, like 0.99 AUC or
+ * 150+ students, because that is the thing a reader is actually
+ * scanning for. Project cards tilt in 3D toward the cursor (see
+ * ui/Tilt.jsx); the open-source card below stays magnetic instead.
  */
 
 function ProjectCard({ project }) {
   const link = project.links[0];
 
   return (
-    <Magnetic strength={0.08} className="h-full">
+    <Tilt className="h-full" max={9} liftScale={1.015}>
       <GlowCard className="flex h-full flex-col p-5">
         {/* metric band */}
         <div className="mb-5 flex items-start justify-between gap-4">
@@ -86,7 +87,7 @@ function ProjectCard({ project }) {
           )}
         </div>
       </GlowCard>
-    </Magnetic>
+    </Tilt>
   );
 }
 
@@ -97,7 +98,7 @@ export default function Projects() {
         <SectionHeading
           id="projects-heading"
           label="PROJECTS"
-          note="Four things I built end to end — two research reproductions, one product in daily use on campus, and one that listens to a water tank."
+          note="Four things I built end to end: two research reproductions, one product in daily use on campus, and one that listens to a water tank."
           action={
             <a
               href={`${profile.githubUrl}?tab=repositories`}
