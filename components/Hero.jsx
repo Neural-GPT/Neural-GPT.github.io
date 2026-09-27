@@ -131,7 +131,7 @@ export default function Hero() {
           <Terminal />
 
           <p className="mt-3 text-center font-mono text-2xs text-dim">
-            This shell is live — type a command.
+            This shell is live. Type a command.
           </p>
         </motion.div>
       </div>
