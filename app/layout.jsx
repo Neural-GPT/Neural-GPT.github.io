@@ -24,7 +24,7 @@ const SITE = "https://neural-gpt.github.io";
 
 export const metadata = {
   metadataBase: new URL(SITE),
-  title: `${profile.name} — ${profile.role}`,
+  title: profile.name,
   description: profile.blurb,
   keywords: [
     profile.name,
@@ -38,7 +38,7 @@ export const metadata = {
   authors: [{ name: profile.name, url: profile.githubUrl }],
   alternates: { canonical: "/" },
   openGraph: {
-    title: `${profile.name} — ${profile.role}`,
+    title: `${profile.name} · ${profile.role}`,
     description: profile.tagline,
     url: SITE,
     siteName: profile.name,
@@ -49,13 +49,13 @@ export const metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: `${profile.name} — ${profile.role}`,
+        alt: `${profile.name} · ${profile.role}`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${profile.name} — ${profile.role}`,
+    title: `${profile.name} · ${profile.role}`,
     description: profile.tagline,
     images: ["/og.png"],
   },
