@@ -28,7 +28,7 @@ export default function About() {
             <div>
               <p className="max-w-[58ch] leading-relaxed text-ice/85">
                 I&apos;m a second-year BCA student at {education.school}, affiliated
-                to AKTU. Most of what I do starts with a paper — I reproduce it,
+                to AKTU. Most of what I do starts with a paper: I reproduce it,
                 break it, then find out whether the result survives contact with a
                 real dataset and a real device.
               </p>
