@@ -23,11 +23,11 @@ const STATUS = {
 
 const logLines = [
   ["2025-10", "Smart Attendance System shipped (Flutter + MobileNetV2)"],
-  ["2026-03", "PatchCore reproduced — 0.99 AUC on MVTec AD"],
+  ["2026-03", "PatchCore reproduced at 0.99 AUC on MVTec AD"],
   ["2026-04", "Research internship begins at IIT Bhubaneswar"],
   ["2026-06", "Jal Rakshak deployed to Android and Windows"],
   ["2026-07", "DynaBERT compression: 1.78× speedup, 94.6% accuracy kept"],
-  ["2026-08", "LeetTrack live — 150+ students onboard"],
+  ["2026-08", "LeetTrack live with 150+ students onboard"],
   ["2026-11", "IIT Roorkee internship starts · Sakura result due"],
   ["2027-01", "Possible research exchange, Iwate Prefectural University"],
 ];
@@ -155,7 +155,7 @@ export default function Research() {
                 <blockquote className="mt-6 border-t border-line pt-5 font-mono text-[0.82rem] leading-relaxed text-ice/80">
                   Research is not just about finding answers. It&apos;s about
                   asking better questions.
-                  <footer className="mt-2 text-2xs text-dim">— Arjun Gupta</footer>
+                  <footer className="mt-2 text-2xs text-dim">Arjun Gupta</footer>
                 </blockquote>
               </GlowCard>
             </Reveal>
