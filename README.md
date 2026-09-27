@@ -126,6 +126,12 @@ Live shell in the hero. Supports `help`, `bio`, `projects`, `research`,
 `cat resume.txt`, `neofetch`, `theme`, `date`, `echo`, `sudo` and `clear`.
 Tab completes, `↑`/`↓` walk history, `Ctrl+L` clears.
 
+`theme` on its own cycles to the next color theme; `theme matrix`, `theme
+synthwave`, `theme cyberpunk`, `theme contrast` or `theme cyan` jumps straight
+to that one. It rewrites the `--accent` CSS variables in `app/globals.css`,
+which every `cyan-*` Tailwind utility in the app reads from, so one command
+re-themes the whole site.
+
 Add a command by adding one entry to `registry` in `components/Terminal.jsx`:
 
 ```js

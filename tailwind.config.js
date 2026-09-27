@@ -17,10 +17,13 @@ module.exports = {
         line: "rgba(255,255,255,0.09)",
         "line-bright": "rgba(255,255,255,0.22)",
         // accents
+        // Driven by CSS variables (see globals.css) so the terminal's
+        // `theme` command can swap every cyan-* utility across the whole
+        // DOM at once, opacity modifiers included (e.g. bg-cyan/20).
         cyan: {
-          DEFAULT: "#22d3ee",
-          soft: "#7dd3fc",
-          deep: "#0891b2",
+          DEFAULT: "rgb(var(--accent-rgb) / <alpha-value>)",
+          soft: "rgb(var(--accent-soft-rgb) / <alpha-value>)",
+          deep: "var(--accent-deep, var(--accent))",
         },
         ice: "#e8f6ff",
         muted: "#8493b8",
@@ -37,8 +40,8 @@ module.exports = {
         shell: "1180px",
       },
       boxShadow: {
-        glow: "0 0 0 1px rgba(34,211,238,0.35), 0 0 32px -6px rgba(34,211,238,0.35)",
-        "glow-soft": "0 0 40px -12px rgba(34,211,238,0.45)",
+        glow: "0 0 0 1px rgb(var(--accent-rgb) / 0.35), 0 0 32px -6px rgb(var(--accent-rgb) / 0.35)",
+        "glow-soft": "0 0 40px -12px rgb(var(--accent-rgb) / 0.45)",
         panel: "0 1px 0 0 rgba(255,255,255,0.05) inset",
       },
       keyframes: {
