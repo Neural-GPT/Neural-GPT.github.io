@@ -36,7 +36,7 @@ export default function GlowCard({
         ticks ? "ticks" : "",
         "transition-[border-color,box-shadow,transform] duration-300",
         "hover:border-[rgba(255,255,255,0.3)]",
-        "hover:shadow-[0_0_0_1px_rgba(34,211,238,0.28),0_18px_50px_-24px_rgba(34,211,238,0.5)]",
+        "hover:shadow-[0_0_0_1px_rgb(var(--accent-rgb)/0.28),0_18px_50px_-24px_rgb(var(--accent-rgb)/0.5)]",
         className,
       ].join(" ")}
       {...rest}
