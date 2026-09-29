@@ -300,14 +300,33 @@ export default function ParticleField({
     const ro = new ResizeObserver(resize);
     ro.observe(wrap);
 
+    // Only listen for pointer movement while the hero is actually on
+    // screen. Previously this was attached to `window` for the whole
+    // page's lifetime, forcing a layout read (getBoundingClientRect)
+    // on every mouse movement anywhere on the page, even after
+    // scrolling straight past the hero — a real cost toward general
+    // page jank and scroll smoothness that had nothing to do with
+    // whether the constellation was even drawing.
+    function attachPointerListeners() {
+      window.addEventListener("pointermove", onPointer, { passive: true });
+      window.addEventListener("pointerleave", onLeave, { passive: true });
+    }
+    function detachPointerListeners() {
+      window.removeEventListener("pointermove", onPointer);
+      window.removeEventListener("pointerleave", onLeave);
+      onLeave();
+    }
+
     const io = new IntersectionObserver(
       ([entry]) => {
         const shouldRun = entry.isIntersecting && !document.hidden;
         if (shouldRun && !running) {
           running = true;
+          attachPointerListeners();
           raf = requestAnimationFrame(loop);
         } else if (!shouldRun && running) {
           running = false;
+          detachPointerListeners();
           cancelAnimationFrame(raf);
         }
       },
@@ -318,16 +337,18 @@ export default function ParticleField({
     function onVisibility() {
       if (document.hidden) {
         running = false;
+        detachPointerListeners();
         cancelAnimationFrame(raf);
       } else if (!running) {
         running = true;
+        attachPointerListeners();
         raf = requestAnimationFrame(loop);
       }
     }
 
-    window.addEventListener("pointermove", onPointer, { passive: true });
-    window.addEventListener("pointerleave", onLeave, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
+    running = true;
+    attachPointerListeners();
     raf = requestAnimationFrame(loop);
 
     return () => {
@@ -335,8 +356,7 @@ export default function ParticleField({
       cancelAnimationFrame(raf);
       ro.disconnect();
       io.disconnect();
-      window.removeEventListener("pointermove", onPointer);
-      window.removeEventListener("pointerleave", onLeave);
+      detachPointerListeners();
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [density, maxNodes, linkDist, parallax, pulseEvery, maxPulses]);

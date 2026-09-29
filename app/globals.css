@@ -156,7 +156,7 @@
     font-size: 0.72rem;
     letter-spacing: 0.02em;
     color: var(--accent-soft);
-    background: rgba(var(--accent-rgb), 0.05);
+    background: rgb(var(--accent-rgb) / 0.05);
     white-space: nowrap;
   }
 
@@ -197,14 +197,14 @@
   }
 
   .glow-text {
-    text-shadow: 0 0 22px rgba(var(--accent-rgb), 0.45);
+    text-shadow: 0 0 22px rgb(var(--accent-rgb) / 0.45);
   }
 
   /* Cursor-tracked glow used by GlowCard; --mx/--my are set in JS. */
   .spotlight {
     background: radial-gradient(
       320px circle at var(--mx, 50%) var(--my, 50%),
-      rgba(var(--accent-rgb), 0.16),
+      rgb(var(--accent-rgb) / 0.16),
       transparent 62%
     );
   }

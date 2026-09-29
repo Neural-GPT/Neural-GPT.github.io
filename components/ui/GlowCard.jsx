@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 
 /**
  * GlowCard
@@ -9,6 +9,15 @@ import { useRef, useCallback } from "react";
  * cyan spotlight that follows the cursor. Position is written to CSS
  * custom properties rather than React state, so moving the mouse
  * never triggers a re-render.
+ *
+ * The rect is read once on mouseenter (or a real resize/scroll), not
+ * on every mousemove — calling getBoundingClientRect() inside a
+ * mousemove handler forces a synchronous layout read on every single
+ * event firing, which is a classic source of scroll jank when it's
+ * happening across several cards on the page at once. The actual
+ * style write is also batched to one requestAnimationFrame per
+ * frame, so a burst of mousemove events collapses into a single
+ * paint instead of one per event.
  */
 export default function GlowCard({
   children,
@@ -18,18 +27,39 @@ export default function GlowCard({
   ...rest
 }) {
   const ref = useRef(null);
+  const rectRef = useRef(null);
+  const pendingRef = useRef(null);
+  const rafRef = useRef(0);
 
-  const onMove = useCallback((e) => {
-    const el = ref.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    el.style.setProperty("--mx", `${e.clientX - r.left}px`);
-    el.style.setProperty("--my", `${e.clientY - r.top}px`);
+  const measure = useCallback(() => {
+    if (ref.current) rectRef.current = ref.current.getBoundingClientRect();
   }, []);
+
+  const flush = useCallback(() => {
+    rafRef.current = 0;
+    const el = ref.current;
+    const p = pendingRef.current;
+    if (!el || !p) return;
+    el.style.setProperty("--mx", `${p.x}px`);
+    el.style.setProperty("--my", `${p.y}px`);
+  }, []);
+
+  const onMove = useCallback(
+    (e) => {
+      const r = rectRef.current;
+      if (!r) return;
+      pendingRef.current = { x: e.clientX - r.left, y: e.clientY - r.top };
+      if (!rafRef.current) rafRef.current = requestAnimationFrame(flush);
+    },
+    [flush]
+  );
+
+  useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
 
   return (
     <Tag
       ref={ref}
+      onMouseEnter={measure}
       onMouseMove={onMove}
       className={[
         "group relative overflow-hidden edge",
