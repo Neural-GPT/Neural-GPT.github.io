@@ -21,11 +21,7 @@ function ProjectCard({ project }) {
   const link = project.links[0];
 
   return (
-<<<<<<< HEAD
-    <Tilt className="h-full" max={9} liftScale={1.015}>
-=======
     <Tilt className="h-full">
->>>>>>> 3e9fad3 (Updated Website)
       <GlowCard className="flex h-full flex-col p-5">
         {/* metric band */}
         <div className="mb-5 flex items-start justify-between gap-4">
