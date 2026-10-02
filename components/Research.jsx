@@ -18,6 +18,7 @@ import GlowCard from "./ui/GlowCard";
 const STATUS = {
   completed: { label: "completed", dot: "bg-cyan", ring: "ring-cyan/30" },
   upcoming: { label: "starts Nov 2026", dot: "bg-cyan-soft", ring: "ring-cyan-soft/25" },
+  invited: { label: "invited", dot: "bg-cyan-soft", ring: "ring-cyan-soft/25" },
   pending: { label: "result pending", dot: "bg-amber-400", ring: "ring-amber-400/25" },
 };
 
@@ -29,6 +30,7 @@ const logLines = [
   ["2026-07", "DynaBERT compression: 1.78× speedup, 94.6% accuracy kept"],
   ["2026-08", "LeetTrack live with 150+ students onboard"],
   ["2026-11", "IIT Roorkee internship starts · Sakura result due"],
+  ["2027", "Invited for a one-week visit to Tokyo University of Agriculture and Technology"],
   ["2027-01", "Possible research exchange, Iwate Prefectural University"],
 ];
 
