@@ -54,14 +54,14 @@ function buildRegistry({ clear, setTheme, themeKeys }) {
     },
 
     bio: {
-      blurb: "who I am and what I'm doing",
+      blurb: "who I am and what I'm up to",
       run: () => [
         head("bio"),
         out(profile.blurb),
         blank(),
         kv("location", profile.location),
         kv("school", `${education.school} · ${education.short}, class of ${education.graduation}`),
-        kv("focus", "NLP · RAG · computer vision · anomaly detection"),
+        kv("focus", "NLP · RAG · computer vision · EEG · anomaly detection"),
         blank(),
         head("highlights"),
         ...highlights.map(bullet),
@@ -69,7 +69,7 @@ function buildRegistry({ clear, setTheme, themeKeys }) {
     },
 
     projects: {
-      blurb: "what I've shipped",
+      blurb: "what I've built",
       run: () => [
         head(`projects (${projects.length})`),
         ...projects.flatMap((p) => [
@@ -83,7 +83,7 @@ function buildRegistry({ clear, setTheme, themeKeys }) {
     },
 
     research: {
-      blurb: "internships, papers, nominations",
+      blurb: "internships and the Japan exchange",
       run: () =>
         research.flatMap((r) => [
           ok(`  [${r.period}] ${r.role}`),
@@ -147,7 +147,7 @@ function buildRegistry({ clear, setTheme, themeKeys }) {
     },
 
     open: {
-      blurb: "open a project repo, e.g. `open leettrack`",
+      blurb: "open a project repo, e.g. `open neurovision`",
       run: (args) => {
         const q = (args[0] || "").toLowerCase();
         if (!q) {
@@ -161,10 +161,11 @@ function buildRegistry({ clear, setTheme, themeKeys }) {
         );
         if (!hit) return [err(`open: no project matching "${q}"`)];
         const link = hit.links[0];
-        if (typeof window !== "undefined" && link) {
+        if (!link) return [err(`open: ${hit.name} has no public link yet`)];
+        if (typeof window !== "undefined") {
           window.open(link.href, "_blank", "noopener,noreferrer");
         }
-        return [ok(`Opening ${hit.name} → ${link?.href}`)];
+        return [ok(`Opening ${hit.name} → ${link.href}`)];
       },
       complete: () => projects.map((p) => p.id),
     },

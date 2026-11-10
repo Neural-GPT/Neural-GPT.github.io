@@ -72,7 +72,7 @@ for cx, cy, dx, dy in ((M, M, 1, 1), (W - M, M, -1, 1), (M, H - M, 1, -1), (W - 
 # ---- type --------------------------------------------------------------
 x = 88
 
-d.text((x, 132), "// AI/ML ENGINEER  ·  CS STUDENT", font=font(MONO, 21), fill=(125, 211, 252))
+d.text((x, 132), "// ML RESEARCH INTERN  ·  CS STUDENT", font=font(MONO, 21), fill=(125, 211, 252))
 
 name_font = font(MONO_B, 88)
 d.text((x, 186), "Arjun", font=name_font, fill=ICE)
@@ -82,13 +82,13 @@ gap = d.textlength("Arjun ", font=name_font)
 d.text((x + gap + 3, 186), "Gupta", font=name_font, fill=(34, 211, 238, 70))
 d.text((x + gap, 186), "Gupta", font=name_font, fill=CYAN)
 
-d.text((x, 306), "Building intelligent systems for a better tomorrow.", font=font(MONO, 25), fill=(232, 246, 255, 230))
+d.text((x, 306), "I reproduce ML papers, then find out what breaks.", font=font(MONO, 25), fill=(232, 246, 255, 230))
 
 d.line([(x, 372), (x + 96, 372)], fill=CYAN, width=2)
 d.line([(x + 96, 372), (x + 470, 372)], fill=(255, 255, 255, 34), width=1)
 
 # ---- headline numbers ---------------------------------------------------
-stats = [("0.99", "AUC  PatchCore"), ("1.78x", "BERT speedup"), ("150+", "LeetTrack users")]
+stats = [("0.99", "AUC  PatchCore"), ("1.78x", "BERT speedup"), ("5.9x", "Bloomberg CLI")]
 sx = x
 for value, label in stats:
     d.text((sx, 406), value, font=font(MONO_B, 40), fill=CYAN)

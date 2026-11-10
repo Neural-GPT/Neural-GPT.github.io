@@ -28,15 +28,15 @@ export default function About() {
             <div>
               <p className="max-w-[58ch] leading-relaxed text-ice/85">
                 I&apos;m a second-year BCA student at {education.school}, affiliated
-                to AKTU. Most of what I do starts with a paper: I reproduce it,
-                break it, then find out whether the result survives contact with a
-                real dataset and a real device.
+                to AKTU. Most of my projects start with a paper. I rebuild it,
+                push on it, and see whether the result still holds up on a
+                dataset I didn&apos;t pick and hardware I can actually afford.
               </p>
               <p className="mt-4 max-w-[58ch] leading-relaxed text-muted">
-                That has taken me from compressing transformers under a fixed
-                latency budget at IIT Bhubaneswar, to recording 28 minutes of my
-                own water tank filling up so a phone could learn the sound of an
-                overflow.
+                That has meant squeezing transformers into a latency budget at
+                IIT Bhubaneswar, recording 40 minutes of my own water tank
+                filling up so a phone could learn what an overflow sounds like,
+                and now pulling financial data through Bloomberg at IIT Roorkee.
               </p>
 
               <ul className="mt-7 grid gap-3">

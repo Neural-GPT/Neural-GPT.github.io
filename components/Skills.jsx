@@ -51,7 +51,7 @@ export default function Skills() {
         <SectionHeading
           id="skills-heading"
           label="SKILLS"
-          note="Pick a group to plot it. Shift-click a second group to overlay it as a dashed outline and compare the two."
+          note="Pick a group to plot it. Shift-click a second one to overlay it as a dashed outline."
         />
 
         <Stagger className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">

@@ -31,7 +31,7 @@ export default function Contact() {
         <SectionHeading
           id="contact-heading"
           label="GET IN TOUCH"
-          note="Open to research collaborations, internships and anything involving a paper that deserves a working implementation."
+          note="Looking for research collaborations and internships. A paper that needs a working implementation is even better."
         />
 
         <Stagger className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
@@ -87,11 +87,11 @@ export default function Contact() {
                   <span className="text-cyan">&gt;</span> say hello
                 </p>
                 <p className="mt-3 max-w-[34ch] font-mono text-lg leading-snug text-ice">
-                  Got a paper you want reproduced, or a problem that needs a model
-                  behind it?
+                  Got a paper you want reproduced, or a problem that needs a
+                  model?
                 </p>
                 <p className="mt-3 max-w-[44ch] text-[0.88rem] leading-relaxed text-muted">
-                  I read everything and reply properly. The fastest route is email.
+                  Email is the quickest way to reach me, and I do reply to everything.
                 </p>
               </div>
 

@@ -12,7 +12,7 @@ import Tilt from "./ui/Tilt";
  * Projects
  * ---------------------------------------------------------------
  * Each card leads with the number that matters, like 0.99 AUC or
- * 150+ students, because that is the thing a reader is actually
+ * 18.6% top-1, because that is the thing a reader is actually
  * scanning for. Project cards tilt in 3D toward the cursor (see
  * ui/Tilt.jsx); the open-source card below stays magnetic instead.
  */
@@ -98,7 +98,7 @@ export default function Projects() {
         <SectionHeading
           id="projects-heading"
           label="PROJECTS"
-          note="Four things I built end to end: two research reproductions, one product in daily use on campus, and one that listens to a water tank."
+          note="Four projects: an EEG decoder, a paper reproduction, an orbit-fitting benchmark where the old method won, and a model that listens to a water tank."
           action={
             <a
               href={`${profile.githubUrl}?tab=repositories`}

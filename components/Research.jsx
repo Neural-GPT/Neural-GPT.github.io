@@ -12,26 +12,24 @@ import GlowCard from "./ui/GlowCard";
  * ---------------------------------------------------------------
  * A real sequence, so a timeline with numbered-feeling markers is
  * the honest structure here. The spine draws itself on scroll; the
- * dots are keyed to status (done / upcoming / pending).
+ * dots are keyed to status (done / in progress / confirmed).
  */
 
 const STATUS = {
   completed: { label: "completed", dot: "bg-cyan", ring: "ring-cyan/30" },
-  upcoming: { label: "starts Nov 2026", dot: "bg-cyan-soft", ring: "ring-cyan-soft/25" },
-  invited: { label: "invited", dot: "bg-cyan-soft", ring: "ring-cyan-soft/25" },
-  pending: { label: "result pending", dot: "bg-amber-400", ring: "ring-amber-400/25" },
+  ongoing: { label: "in progress", dot: "bg-cyan-soft", ring: "ring-cyan-soft/25" },
+  confirmed: { label: "confirmed", dot: "bg-emerald-400", ring: "ring-emerald-400/25" },
 };
 
 const logLines = [
-  ["2025-10", "Smart Attendance System shipped (Flutter + MobileNetV2)"],
-  ["2026-03", "PatchCore reproduced at 0.99 AUC on MVTec AD"],
-  ["2026-04", "Research internship begins at IIT Bhubaneswar"],
-  ["2026-06", "Jal Rakshak deployed to Android and Windows"],
-  ["2026-07", "DynaBERT compression: 1.78× speedup, 94.6% accuracy kept"],
-  ["2026-08", "LeetTrack live with 150+ students onboard"],
-  ["2026-11", "IIT Roorkee internship starts · Sakura result due"],
-  ["2027", "Invited for a one-week visit to Tokyo University of Agriculture and Technology"],
-  ["2027-01", "Possible research exchange, Iwate Prefectural University"],
+  ["2026-03", "PatchCore reproduced, 0.99 AUC on MVTec AD"],
+  ["2026-04", "Started at IIT Bhubaneswar (NLP / RAG)"],
+  ["2026-06", "Jal Rakshak running on Android and Windows"],
+  ["2026-07", "DynaBERT compression: 1.78× faster, 94.6% accuracy kept"],
+  ["2026-08", "Orbital-X: least-squares beat the PINN and the Neural ODE"],
+  ["2026-10", "NeuroVision hits 18.6% top-1 on unseen EEG-to-image retrieval"],
+  ["2026-11", "Started at IIT Roorkee: Bloomberg CLI cut retrieval 5.9×"],
+  ["2027-01", "Sakura Science Exchange, Iwate Prefectural University"],
 ];
 
 export default function Research() {
@@ -41,7 +39,7 @@ export default function Research() {
         <SectionHeading
           id="research-heading"
           label="RESEARCH & EXPERIENCE"
-          note="Where the work has been formally supervised, and what came out of it."
+          note="Two internships and a research exchange in Japan, with the numbers that came out of each."
         />
 
         <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
@@ -155,8 +153,8 @@ export default function Research() {
                 </ul>
 
                 <blockquote className="mt-6 border-t border-line pt-5 font-mono text-[0.82rem] leading-relaxed text-ice/80">
-                  Research is not just about finding answers. It&apos;s about
-                  asking better questions.
+                  Best result of the year: a neural network losing to
+                  least-squares, with p-values to prove it.
                   <footer className="mt-2 text-2xs text-dim">Arjun Gupta</footer>
                 </blockquote>
               </GlowCard>
