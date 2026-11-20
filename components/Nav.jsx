@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Download, Menu, X, Terminal as TerminalIcon } from "lucide-react";
+import { Menu, X, Terminal as TerminalIcon } from "lucide-react";
 import { nav, profile } from "@/lib/data";
-import Magnetic from "./ui/Magnetic";
 
 /**
  * Nav
@@ -97,17 +96,6 @@ export default function Nav() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Magnetic strength={0.4} className="hidden sm:block">
-            <a
-              href={`/${profile.resumeFile}`}
-              download
-              className="flex items-center gap-2 rounded border border-line-bright bg-raised px-3.5 py-2 font-mono text-2xs tracking-wide text-ice transition-all hover:border-cyan hover:text-cyan hover:shadow-glow"
-            >
-              <Download size={13} />
-              Résumé
-            </a>
-          </Magnetic>
-
           <button
             onClick={() => setOpen((o) => !o)}
             className="grid h-9 w-9 place-items-center rounded border border-line text-muted md:hidden"
@@ -139,13 +127,6 @@ export default function Nav() {
               {item.label}
             </a>
           ))}
-          <a
-            href={`/${profile.resumeFile}`}
-            download
-            className="mt-1 flex items-center gap-2 rounded border border-line-bright px-3 py-2.5 font-mono text-sm text-cyan"
-          >
-            <Download size={14} /> Download résumé
-          </a>
         </div>
       </motion.nav>
     </header>

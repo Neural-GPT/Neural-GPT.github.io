@@ -29,7 +29,6 @@ const logLines = [
   ["2026-08", "Orbital-X: least-squares beat the PINN and the Neural ODE"],
   ["2026-10", "NeuroVision hits 18.6% top-1 on unseen EEG-to-image retrieval"],
   ["2026-11", "Started at IIT Roorkee: Bloomberg CLI cut retrieval 5.9×"],
-  ["2027-01", "Sakura Science Exchange, Iwate Prefectural University"],
 ];
 
 export default function Research() {
@@ -39,7 +38,7 @@ export default function Research() {
         <SectionHeading
           id="research-heading"
           label="RESEARCH & EXPERIENCE"
-          note="Two internships and a research exchange in Japan, with the numbers that came out of each."
+          note="Two internships, with the numbers that came out of each."
         />
 
         <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">

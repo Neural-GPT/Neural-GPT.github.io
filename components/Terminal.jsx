@@ -83,7 +83,7 @@ function buildRegistry({ clear, setTheme, themeKeys }) {
     },
 
     research: {
-      blurb: "internships and the Japan exchange",
+      blurb: "internships",
       run: () =>
         research.flatMap((r) => [
           ok(`  [${r.period}] ${r.role}`),
